@@ -1,7 +1,8 @@
 # Custom Criteria for the Explorer plugin
 
-More about Explorer plugin:  https://observatory.xjph.net/usage/plugins/explorer
-More about Custom Criteria:  https://observatory.xjph.net/usage/plugins/explorer/customcriteria
+More about ...
+*   Explorer plugin:  https://observatory.xjph.net/usage/plugins/explorer
+*   Custom Criteria:  https://observatory.xjph.net/usage/plugins/explorer/customcriteria
 
 Each criteria file includes a brief description of what it does. Please take a look!
 
@@ -66,4 +67,4 @@ Copy the `---@Complex` criteria sections **INCLUDING** the `---@Complex` **AND**
 1.  If it finishes without showing any errors, great! You can then go to the Explorer tab, click Export and pick a file to export the content to. Open that in a text editor (like Notepad) and take a look at the results. Use the Ctrl+F key (Find in file feature) to locate occurrences of the criteria you are interested in.
 1.  If it finishes with errors, you can find errors in your Documents folder in a file called ObservatoryErrorLog.txt. Hopefully the error messages there in combination with the [custom criteria documentation site](https://observatory.xjph.net/usage/plugins/explorer/customcriteria) are helpful enough to help you find the error. If you find yourself really stuck, post up in the Observatory Core discord (see below) and we'll try to help you get it sorted.
 
-You can find the Observatory discord from the [official documentation site](https://observatory.xjph.net/)
+You can find the Observatory discord from the [official documentation site](https://observatory.xjph.net/).
