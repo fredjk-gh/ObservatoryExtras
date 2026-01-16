@@ -1,0 +1,151 @@
+{
+    "Name": "Coddiwompler's Blue and Gold",
+    "Theme": {
+        "Default.BackColor": {
+            "R": 8,
+            "G": 8,
+            "B": 37
+        },
+        "Default.ForeColor": {
+            "Name": "LightSkyBlue"
+        },
+        "LinkLabel.ActiveLinkColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "LinkLabel.DisabledLinkColor": {
+            "R": 129,
+            "G": 129,
+            "B": 129
+        },
+        "LinkLabel.LinkColor": {
+            "Name": "LightSkyBlue"
+        },
+        "CheckBox.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ComboBox.BackColor": {
+            "R": 8,
+            "G": 8,
+            "B": 37
+        },
+        "ComboBox.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "TextBox.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "UpDownEdit.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "Button.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ThemeableIconButton.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ThemeableImageButton.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ThemeableImageLabel.IconColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ScalableLabel.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "Button.BackColor": {
+            "Name": "DimGray"
+        },
+        "DataGridView.BackgroundColor": {
+            "R": 8,
+            "G": 8,
+            "B": 37
+        },
+        "DataGridView.GridColor": {
+            "Name": "Olive"
+        },
+        "CollapsibleGroupBox.BorderColor": {
+            "Name": "Olive"
+        },
+        "DataGridView.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "SplitContainer.BackColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ColourableTabControl.TabColor": {
+            "Name": "DimGray"
+        },
+        "ColourableTabControl.SelectedTabColor": {
+            "R": 142,
+            "G": 142,
+            "B": 142
+        },
+        "ColourableTabControl.ForeColor": {
+            "R": 200,
+            "G": 232,
+            "B": 255
+        },
+        "ColourableTabControl.BackColor": {
+            "R": 8,
+            "G": 8,
+            "B": 37
+        },
+        "ExpanderTile.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ExpanderLabel.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ListBox.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "CheckedListBox.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ThemeableProgressBar.BackColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
+        "ThemeableProgressBar.BorderColor": {
+            "Name": "LightSkyBlue"
+        },
+        "PluginListView.ForeColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        }
+    }
+}

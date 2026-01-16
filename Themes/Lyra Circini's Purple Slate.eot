@@ -1,0 +1,159 @@
+{
+    "Name": "Lyra Circini's Purple Slate",
+    "Theme": {
+        "Default.BackColor": {
+            "R": 18,
+            "G": 0,
+            "B": 36
+        },
+        "Default.ForeColor": {
+            "R": 193,
+            "G": 136,
+            "B": 255
+        },
+        "LinkLabel.ActiveLinkColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "LinkLabel.DisabledLinkColor": {
+            "R": 129,
+            "G": 129,
+            "B": 129
+        },
+        "LinkLabel.LinkColor": {
+            "R": 193,
+            "G": 136,
+            "B": 255
+        },
+        "CheckBox.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ComboBox.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "TextBox.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "UpDownEdit.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ThemeableIconButton.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ThemeableImageButton.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ThemeableImageLabel.IconColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ScalableLabel.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "Button.BackColor": {
+            "Name": "DimGray"
+        },
+        "Button.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "DataGridView.BackgroundColor": {
+            "R": 18,
+            "G": 0,
+            "B": 36
+        },
+        "DataGridView.GridColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "DataGridView.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "CollapsibleGroupBox.BorderColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "SplitContainer.BackColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ColourableTabControl.TabColor": {
+            "Name": "DimGray"
+        },
+        "ColourableTabControl.SelectedTabColor": {
+            "Name": "DarkGray"
+        },
+        "ColourableTabControl.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ColourableTabControl.BackColor": {
+            "R": 8,
+            "G": 8,
+            "B": 37
+        },
+        "ExpanderTile.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ExpanderLabel.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ListBox.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "CheckedListBox.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ThemeableProgressBar.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "ThemeableProgressBar.BackColor": {
+            "R": 193,
+            "G": 136,
+            "B": 255
+        },
+        "ThemeableProgressBar.BorderColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        },
+        "PluginListView.ForeColor": {
+            "R": 234,
+            "G": 215,
+            "B": 255
+        }
+    }
+}
