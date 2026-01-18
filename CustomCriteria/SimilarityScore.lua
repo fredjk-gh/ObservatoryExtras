@@ -147,13 +147,17 @@ end
 ---@Complex Earth Similarity Score
 local score = ComputeSimilarityScore(scan, Earth)
 if score >= 0 and (MAXIMIUM_SIMILARITY_SCORE_FOR_NOTIFICATION < 0 or score > MAXIMIUM_SIMILARITY_SCORE_FOR_NOTIFICATION) then
-    return true, string.format("Similarity Score: %s", Earth.Name), string.format("Score: %.2f", score)
+  return true,
+    string.format("Similarity Score: %s", Earth.Name),
+    string.format("Score: %.2f, first discovery? %s, %s", score, scan.ScanType ~= 'NavBeaconDetail' and not scan.WasDiscovered and not scan.WasMapped, scan.TerraformState)
 end
 ---@End
 
 ---@Complex Mars Similarity Score
 local score = ComputeSimilarityScore(scan, Mars)
 if score >= 0 and (MAXIMIUM_SIMILARITY_SCORE_FOR_NOTIFICATION < 0 or score > MAXIMIUM_SIMILARITY_SCORE_FOR_NOTIFICATION) then
-    return true, string.format("Similarity Score: %s", Mars.Name), string.format("Score: %.2f", score)
+  return true,
+    string.format("Similarity Score: %s", Mars.Name),
+    string.format("Score: %.2f, first discovery? %s, %s", score, scan.ScanType ~= 'NavBeaconDetail' and not scan.WasDiscovered and not scan.WasMapped, scan.TerraformState)
 end
 ---@End
