@@ -67,6 +67,11 @@
             "G": 216,
             "B": 129
         },
+        "ThemeableImageLabel.ImageColor": {
+            "R": 235,
+            "G": 216,
+            "B": 129
+        },
         "ScalableLabel.ForeColor": {
             "R": 235,
             "G": 216,
