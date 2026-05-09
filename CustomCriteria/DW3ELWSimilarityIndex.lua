@@ -12,11 +12,43 @@
 -- Inspiration:                 https://justbearli.short.gy/DW3Earth2Submission
 -- 
 -- Author: Cmdr Coddiwompler / fredjk-gh, based on work by Pseudo6606 [Foxtrot]; see the #search-for-earth-2 channel in the FleetComm HQ discord.
--- version 2026-05-08.1 -- Checked against version 3 of the official app.
+-- version 2026-05-09.1 -- Checked against version 3 of the official app.
 -- More Observatory Extras: https://github.com/fredjk-gh/ObservatoryExtras
 -- ** Requires Observatory Core >= 1.5 **
 
 ---@Global DW3
+
+---@param val number
+---@param min number
+---@param max number
+function math.clamp(val, min, max)
+  return math.max(min, math.min(max, val))
+end
+
+-- Also yoinked from the internet.
+---@param t table
+function GetTableSize(t)
+  local count = 0
+  for _ in pairs(t) do
+      count = count + 1
+  end
+  return count
+end
+
+-- From http://lua-users.org/wiki/CopyTable
+function ShallowCopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[orig_key] = orig_value
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
 
 -- For DW3 Earth Similarity Index
 DW3Elw_DebugEnable = false
