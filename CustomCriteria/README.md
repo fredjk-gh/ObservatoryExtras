@@ -52,12 +52,20 @@ You can create or edit the custom criteria `.lua` file with any basic text edito
 
 ## Adding to an existing Custom Criteria file
 
-### Global section
+### For Explorer v1.3
+
+As of Observatory Core 1.5 and Explorer 1.3, you can now just copy the contents of a new criteria file into your existing file at the bottom and it "just works".
+
+Specifically, Explorer v1.3 supports multiple Global sections, so no special action is required to combine files.
+
+### For older versions of Explorer < 1.3
+
+#### Global section
 
 If the custom criteria includes a `---@Global` section, select and copy everything **between**, but not including the `---@Global` marker and it's corresponding `---@End` marker and paste it just before the `---@End` of the Global section in your existing custom criteria file.
 Ensure the `---@Global` and `---@End` are the only things on its line (so ensure it doesn't just get tagged on the end of another line, for example: `end---@End`).
 
-### Critera sections
+#### Critera sections
 Copy the `---@Complex` criteria sections **INCLUDING** the `---@Complex` **AND** `---@End` markers and paste it at the very bottom of your existing custom criteria file (after the last criteria there).
 
 ## Testing your Custom Criteria
