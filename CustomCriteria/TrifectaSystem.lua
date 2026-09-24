@@ -5,15 +5,20 @@
 -- More about Custom Criteria:  https://observatory.xjph.net/usage/plugins/explorer/customcriteria
 -- 
 -- Author: Cmdr Coddiwompler
--- version 2026-09-19.1
+-- Contributions from: Maxsson
+-- version 2026-09-20.1
 -- More Observatory Extras: https://github.com/fredjk-gh/ObservatoryExtras
 
 ---@Global - Trifecta
+_ReportedTrifectas = {}
 
 ---@param allBodies allBodies
 ---@param system system
 ---@param parentsTable table<number, parents>
 function CheckTrifecta(allBodies, system, parentsTable)
+  local key = tostring(allBodies.SystemAddress)
+  if _ReportedTrifectas[key] then return end
+
   local bodyCount = 0
   local ELWCount = 0
   local WWCount = 0
@@ -28,12 +33,14 @@ function CheckTrifecta(allBodies, system, parentsTable)
       elseif s.PlanetClass == "Ammonia world" then
         AWCount = AWCount + 1
       end
+      bodyCount = bodyCount + 1
+    elseif isStar(s) then
+      bodyCount = bodyCount + 1
     end
-
-    bodyCount = bodyCount + 1
   end
 
   if bodyCount == allBodies.Count and ELWCount > 0 and WWCount > 0 and AWCount > 0 then
+    _ReportedTrifectas[key] = true -- suppress duplicate notifications.
     notify("Trifecta system",
         "System contains at least one earth-like, water and ammonia world",
         string.format("%d ELWs, %d WWs, %d AWs", ELWCount, WWCount, AWCount))
