@@ -7,7 +7,7 @@
 -- More about Custom Criteria:  https://observatory.xjph.net/usage/plugins/explorer/customcriteria
 -- 
 -- Author: Cmdr Coddiwompler
--- version 2026-09-24.1
+-- version 2026-10-06.1
 -- More Observatory Extras: https://github.com/fredjk-gh/ObservatoryExtras
 
 ---@Global - High Value Body
@@ -21,7 +21,7 @@ if HighValueBody_ExcludeAlreadyMapped and scan.WasMapped then
 end
 
 if scan.PlanetClass == "Ammonia world" or scan.PlanetClass == "Earthlike body" or scan.PlanetClass == "Water world" or (scan.TerraformState and #scan.TerraformState > 0) then
-  local detail = scan.PlanetClass
+  local detail = string.format("%s, %s Ls", scan.PlanetClass, Thousands(scan.DistanceFromArrivalLS))
   if (scan.TerraformState and #scan.TerraformState > 0) then
     detail = scan.TerraformState .. " " .. detail
   end
