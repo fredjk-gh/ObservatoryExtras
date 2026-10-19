@@ -1,0 +1,127 @@
+{
+    "Name": "Elite Orange",
+    "Theme": {
+        "Default.BackColor": {
+            "Name": "Black"
+        },
+        "Default.ForeColor": {
+            "Name": "Orange"
+        },
+        "LinkLabel.ActiveLinkColor": {
+            "R": 255,
+            "G": 227,
+            "B": 195
+        },
+        "LinkLabel.DisabledLinkColor": {
+            "R": 129,
+            "G": 129,
+            "B": 129
+        },
+        "LinkLabel.LinkColor": {
+            "Name": "Orange"
+        },
+        "CheckBox.ForeColor": {
+            "Name": "Orange"
+        },
+        "ComboBox.BackColor": {
+            "Name": "Black"
+        },
+        "ComboBox.ForeColor": {
+            "Name": "Orange"
+        },
+        "TextBox.ForeColor": {
+            "Name": "Orange"
+        },
+        "UpDownEdit.ForeColor": {
+            "Name": "Orange"
+        },
+        "Button.ForeColor": {
+            "Name": "Orange"
+        },
+        "ThemeableIconButton.ForeColor": {
+            "Name": "Orange"
+        },
+        "ThemeableImageButton.ForeColor": {
+            "Name": "Orange"
+        },
+        "ThemeableImageLabel.IconColor": {
+            "Name": "Orange"
+        },
+        "ThemeableImageLabel.ImageColor": {
+            "Name": "Orange"
+        },
+        "ScalableLabel.ForeColor": {
+            "Name": "Orange"
+        },
+        "Button.BackColor": {
+            "R": 74,
+            "G": 74,
+            "B": 74
+        },
+        "DataGridView.BackgroundColor": {
+            "Name": "Black"
+        },
+        "DataGridView.GridColor": {
+            "R": 255,
+            "G": 227,
+            "B": 195
+        },
+        "CollapsibleGroupBox.BorderColor": {
+            "R": 255,
+            "G": 227,
+            "B": 195
+        },
+        "DataGridView.ForeColor": {
+            "Name": "Orange"
+        },
+        "SplitContainer.BackColor": {
+            "Name": "Orange"
+        },
+        "ColourableTabControl.TabColor": {
+            "R": 74,
+            "G": 74,
+            "B": 74
+        },
+        "ColourableTabControl.SelectedTabColor": {
+            "R": 142,
+            "G": 142,
+            "B": 142
+        },
+        "ColourableTabControl.SelectedTabForeColor": {
+            "R": 255,
+            "G": 227,
+            "B": 195
+        },
+        "ColourableTabControl.ForeColor": {
+            "Name": "Orange"
+        },
+        "ColourableTabControl.BackColor": {
+            "Name": "Black"
+        },
+        "ExpanderTile.ForeColor": {
+            "Name": "Orange"
+        },
+        "ExpanderLabel.ForeColor": {
+            "Name": "Orange"
+        },
+        "ListBox.ForeColor": {
+            "Name": "Orange"
+        },
+        "CheckedListBox.ForeColor": {
+            "Name": "Orange"
+        },
+        "ThemeableProgressBar.BackColor": {
+            "R": 170,
+            "G": 108,
+            "B": 0
+        },
+        "ThemeableProgressBar.BorderColor": {
+            "R": 255,
+            "G": 227,
+            "B": 195
+        },
+        "PluginListView.ForeColor": {
+            "Name": "Orange"
+        }
+    }
+}
