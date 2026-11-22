@@ -5,12 +5,14 @@
             "Name": "Black"
         },
         "Default.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "LinkLabel.ActiveLinkColor": {
             "R": 255,
-            "G": 227,
-            "B": 195
+            "G": 225,
+            "B": 211
         },
         "LinkLabel.DisabledLinkColor": {
             "R": 129,
@@ -18,40 +20,62 @@
             "B": 129
         },
         "LinkLabel.LinkColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "CheckBox.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ComboBox.BackColor": {
             "Name": "Black"
         },
         "ComboBox.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "TextBox.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "UpDownEdit.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "Button.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ThemeableIconButton.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ThemeableImageButton.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ThemeableImageLabel.IconColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ThemeableImageLabel.ImageColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ScalableLabel.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "Button.BackColor": {
             "R": 74,
@@ -63,19 +87,23 @@
         },
         "DataGridView.GridColor": {
             "R": 255,
-            "G": 227,
-            "B": 195
+            "G": 225,
+            "B": 211
         },
         "CollapsibleGroupBox.BorderColor": {
             "R": 255,
-            "G": 227,
-            "B": 195
+            "G": 225,
+            "B": 211
         },
         "DataGridView.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "SplitContainer.BackColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ColourableTabControl.TabColor": {
             "R": 74,
@@ -89,36 +117,47 @@
         },
         "ColourableTabControl.SelectedTabForeColor": {
             "R": 255,
-            "G": 227,
-            "B": 195
+            "G": 225,
+            "B": 211
+
         },
         "ColourableTabControl.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ColourableTabControl.BackColor": {
             "Name": "Black"
         },
         "ExpanderTile.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ExpanderLabel.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ListBox.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "CheckedListBox.ForeColor": {
-            "Name": "Orange"
+            "R": 255,
+            "G": 111,
+            "B": 0
         },
         "ThemeableProgressBar.BackColor": {
-            "R": 170,
-            "G": 108,
+            "R": 161,
+            "G": 67,
             "B": 0
         },
         "ThemeableProgressBar.BorderColor": {
             "R": 255,
-            "G": 227,
-            "B": 195
+            "G": 225,
+            "B": 211
         },
         "PluginListView.ForeColor": {
             "Name": "Orange"
