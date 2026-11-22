@@ -1,8 +1,8 @@
 -- A custom criteria for the Explorer plugin for Xjph/ObservatoryCore which compares a scanned ELW against the details
 -- of Earth (in-game) to derive a score measuring similarity. 100 is an exact match, lower is less similar.
 -- This is NOT DW3 organizer approved nor official in any way. It's a reverse-engineering of the official website
--- and may not be 100% accurate. It's mostly for a quick result while you wait for the data to sync to Spansh so you
--- can upload it officially.
+-- and may not be 100% accurate (it's been accurate to +/- 0.1). It's mostly for a quick result while you wait for the
+-- data to sync to Spansh.
 --
 -- Note that this will generate a result for any ELWs found after fully completing the FSS systems scan.
 --
@@ -11,23 +11,29 @@
 -- More about Custom Criteria:  https://observatory.xjph.net/usage/plugins/explorer/customcriteria
 -- Inspiration:                 https://justbearli.short.gy/DW3Earth2Submission
 -- 
--- Author: Cmdr Coddiwompler / fredjk-gh, based on work by Pseudo6606 [Foxtrot]; see the #search-for-earth-2 channel in the FleetComm HQ discord.
--- version 2026-05-09.1 -- Checked against version 3 of the official app.
+-- Author: Cmdr Coddiwompler / fredjk-gh, based on work by Pseudo6606 [Foxtrot]; see the #search-for-earth-2 channel
+-- in the FleetComm HQ discord.
+--
 -- More Observatory Extras: https://github.com/fredjk-gh/ObservatoryExtras
--- ** Requires Observatory Core >= 1.5 **
+-- ** Requires Observatory Core >= 1.4.4 **
+-- 
+-- Version History:
+-- version 2026-11-22.1 -- Minor refinements.
+-- version 2026-03-07.1 -- Checked against version 3 of the official app.
 
 ---@Global DW3
 
+-- For DW3 Earth Similarity Index
 ---@param val number
 ---@param min number
 ---@param max number
-function math.clamp(val, min, max)
+function math.clampDW3Elw(val, min, max)
   return math.max(min, math.min(max, val))
 end
 
 -- Also yoinked from the internet.
 ---@param t table
-function GetTableSize(t)
+function DW3Elw_GetTableSize(t)
   local count = 0
   for _ in pairs(t) do
       count = count + 1
@@ -36,7 +42,7 @@ function GetTableSize(t)
 end
 
 -- From http://lua-users.org/wiki/CopyTable
-function ShallowCopy(orig)
+function DW3Elw_ShallowCopy(orig)
     local orig_type = type(orig)
     local copy
     if orig_type == 'table' then
@@ -50,18 +56,17 @@ function ShallowCopy(orig)
     return copy
 end
 
--- For DW3 Earth Similarity Index
 DW3Elw_DebugEnable = false
 DW3Elw_VerboseEnable = true
 
----@class ComponentScore
+---@class DW3Elw_ComponentScore
 ---@field Label string
 ---@field Score number
 ---@field Value number
 ---@field FormatStr string
 ---@field ValueAdj number
-ComponentScore = {}
-function ComponentScore:new(o)
+DW3Elw_ComponentScore = {}
+function DW3Elw_ComponentScore:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -73,7 +78,7 @@ end
 ---@param max number
 ---@param ideal number
 ---@param value number
-function GaussianScore(min, max, ideal, value)
+function DW3Elw_GaussianScore(min, max, ideal, value)
   if value <= min or value >= max then return 0 end
 
   local half = 0
@@ -90,7 +95,7 @@ end
 
 ---@param label string
 ---@param value number
-function DebugValue(label, value)
+function DW3Elw_DebugValue(label, value)
   if DW3Elw_DebugEnable then
     notify("Debug", label, string.format("%s", value))
   end
@@ -100,7 +105,7 @@ end
 ---@param label string
 ---@param value number
 ---@param bodyId number
-function DebugValueForBody(label, value, bodyId)
+function DW3Elw_DebugValueForBody(label, value, bodyId)
   if DW3Elw_DebugEnable then
     notifyForBody("Debug", label, string.format("%s", value), bodyId)
   end
@@ -109,12 +114,12 @@ end
 
 ---@param scan scan
 ---@return number
-function GetBodyKey(scan)
+function DW3Elw_GetBodyKey(scan)
   return scan.BodyID -- string.format("%i", scan.BodyID)
 end
 
 ---@param scan scan
-function ComputeNonO2Fraction(scan)
+function DW3Elw_ComputeNonO2Fraction(scan)
   local nonO2fraction = 1
   for atmoMat in materials(scan.AtmosphereComposition) do
     if atmoMat.name == "Oxygen" then
@@ -129,14 +134,14 @@ end
 ---@param system system
 ---@param parentsTable table<number, parents>
 ---@return table<number, table<scan>>
-function BuildChildrenTable(system, parentsTable)
+function DW3Elw_BuildChildrenTable(system, parentsTable)
   ---@type table<number, table<scan>>
   local childrenTable = {}
 
   for body in bodies(system) do
     local lastChildScan = body
     if body.BodyID > 0 then -- BodyID is never in the parentsTable
-      for p in allparents(parentsTable[GetBodyKey(body)]) do
+      for p in allparents(parentsTable[DW3Elw_GetBodyKey(body)]) do
         if childrenTable[p.body] == nil then
           childrenTable[p.body] = {}
         end
@@ -156,11 +161,13 @@ end
 ---@param system system
 ---@param parentsTable table<number, parents>
 ---@param childrenTable table<number, table<scan>>
-function ComputeOrbitalPeriod(elwScan, system, parentsTable, childrenTable)
+function DW3Elw_ComputeOrbitalPeriod(elwScan, system, parentsTable, childrenTable)
   ---@type parents
-  local parents = parentsTable[GetBodyKey(elwScan)]
+  local parents = parentsTable[DW3Elw_GetBodyKey(elwScan)]
   local localOrbitalPeriodDays = periodAsDay(elwScan.OrbitalPeriod)
-  if not parents then return DebugValue("Using local orbitalPeriod (from elw)", localOrbitalPeriodDays) end
+  if not parents then
+     return DW3Elw_DebugValueForBody("Using local orbitalPeriod (from elw)", localOrbitalPeriodDays, elwScan.BodyID)
+  end
 
   -- First look for any direct stars in parents, use the orbital period from the next level lower.
   local lastScan = elwScan
@@ -168,7 +175,7 @@ function ComputeOrbitalPeriod(elwScan, system, parentsTable, childrenTable)
     if parent.parenttype == "Star" then
       -- use the lastScan's orbital period, if not nil
       if lastScan ~= nil then
-        return DebugValue(string.format("Direct pass: Using orbitalPeriod from "..lastScan.BodyID), periodAsDay(lastScan.OrbitalPeriod))
+        return DW3Elw_DebugValueForBody(string.format("Direct pass: Using orbitalPeriod from "..lastScan.BodyID), periodAsDay(lastScan.OrbitalPeriod), elwScan.BodyID)
       end
       break;
     end
@@ -181,7 +188,9 @@ function ComputeOrbitalPeriod(elwScan, system, parentsTable, childrenTable)
   local bestOrbitalPeriodDays = localOrbitalPeriodDays
   local lastChildScan = elwScan
   for parent in allparents(parents) do
-    if parent.parenttype ~= 'Null' or not parent.scan then return DebugValue("Using orbitalPeriod from "..lastChildScan.BodyID, bestOrbitalPeriodDays) end
+    if parent.parenttype ~= 'Null' or not parent.scan then
+      return DW3Elw_DebugValueForBody("Using orbitalPeriod from "..lastChildScan.BodyID, bestOrbitalPeriodDays, elwScan.BodyID)
+    end
 
     local children = childrenTable[parent.body]
     for _, c in pairs(children) do
@@ -191,7 +200,7 @@ function ComputeOrbitalPeriod(elwScan, system, parentsTable, childrenTable)
       if child.BodyID ~= lastChildScan.BodyID then
         if isStar(child) then -- and not (child.StarType == "Y" or child.StarType == "T" or child.StarType == "L") then
           -- Consider this the parent star -- use this parent's orbital period.
-          return DebugValue("Using orbitalPeriod from "..lastChildScan.BodyID, bestOrbitalPeriodDays)
+          return DW3Elw_DebugValueForBody("Using orbitalPeriod from "..lastChildScan.BodyID, bestOrbitalPeriodDays, elwScan.BodyID)
         end
       end
     end
@@ -199,37 +208,37 @@ function ComputeOrbitalPeriod(elwScan, system, parentsTable, childrenTable)
     lastChildScan = parent.scan
   end
 
-  return DebugValue("Using orbitalPeriod from last available scan "..lastChildScan.BodyID, bestOrbitalPeriodDays)
+  return DW3Elw_DebugValueForBody("Using orbitalPeriod from last available scan "..lastChildScan.BodyID, bestOrbitalPeriodDays, elwScan.BodyID)
 end
 
-RE_m   = 6.371e6
-ME_kg  = 5.972e24
-A_EM_m = 384400e3
-P_EM_s = 27.321661 * 86400
-N_EM   = 2 * math.pi / P_EM_s
-E_EM   = 0.0549;
-MMRATIO_EM = 0.0123000371
-EARTH_OBL_RAD = 23.439281 * math.pi / 180;
-X_EM_HEATED   = math.cos(EARTH_OBL_RAD)
-P_EM_DAYS     = 27.321661
-EARTH_ROT_D   = 1.0
-P_EM_REF      = P_EM_DAYS / EARTH_ROT_D
-K_TW   = 3.2;
+DW3Elw_RE_m   = 6.371e6
+DW3Elw_ME_kg  = 5.972e24
+DW3Elw_A_EM_m = 384400e3
+DW3Elw_P_EM_s = 27.321661 * 86400
+DW3Elw_N_EM   = 2 * math.pi / DW3Elw_P_EM_s
+DW3Elw_E_EM   = 0.0549;
+DW3Elw_MMRATIO_EM = 0.0123000371
+DW3Elw_EARTH_OBL_RAD = 23.439281 * math.pi / 180;
+DW3Elw_X_EM_HEATED   = math.cos(DW3Elw_EARTH_OBL_RAD)
+DW3Elw_P_EM_DAYS     = 27.321661
+DW3Elw_EARTH_ROT_D   = 1.0
+DW3Elw_P_EM_REF      = DW3Elw_P_EM_DAYS / DW3Elw_EARTH_ROT_D
+DW3Elw_K_TW   = 3.2;
 
 ---@param elwScan scan
 ---@param system system
 ---@param parentsTable table<number, parents>
 ---@return number, number
-function ComputeTidalHeatingScore(elwScan, system, parentsTable)
-  local moons = FindPerturbers(elwScan, system, parentsTable)
-  DebugValue("Found Moon Count", #moons)
-  local orbitalParent = FindOrbitalParent(elwScan, parentsTable)
+function DW3Elw_ComputeTidalHeatingScore(elwScan, system, parentsTable)
+  local moons = DW3Elw_FindPerturbers(elwScan, system, parentsTable)
+  DW3Elw_DebugValue("Found Moon Count", #moons)
+  local orbitalParent = DW3Elw_FindOrbitalParent(elwScan, parentsTable)
 
   local heatedObj = elwScan
   ---@type table<scan>
   local perturbers = {}
   if orbitalParent ~= nil then -- ie. elwIsMoon -- the ELW is the perturber
-    DebugValueForBody(string.format("ELW has Orbital Parent %s", orbitalParent.BodyName), orbitalParent.BodyID, elwScan.BodyID)
+    DW3Elw_DebugValueForBody(string.format("ELW has Orbital Parent %s", orbitalParent.BodyName), orbitalParent.BodyID, elwScan.BodyID)
     heatedObj = orbitalParent
     table.insert(perturbers, elwScan)
   else
@@ -246,37 +255,37 @@ function ComputeTidalHeatingScore(elwScan, system, parentsTable)
       ---@type scan
       local perturber = v
       local Pert_Sma = perturber.SemiMajorAxis -- a_m
-      local Pert_MassKg = perturber.MassEM * ME_kg -- mPert
+      local Pert_MassKg = perturber.MassEM * DW3Elw_ME_kg -- mPert
       local Pert_OrbPer = math.abs(perturber.OrbitalPeriod) -- Pm_s
       local Pert_Ecc = perturber.Eccentricity -- e
 
-      local n = DebugValueForBody(string.format("%s: n", perturber.BodyName), 2 * math.pi / Pert_OrbPer, perturber.BodyID)
-      local q = DebugValueForBody(string.format("%s: q", perturber.BodyName), Pert_MassKg / (heatedObj.MassEM * ME_kg), perturber.BodyID)
-      local q_ratio = DebugValueForBody(string.format("%s: q_ratio", perturber.BodyName), q / MMRATIO_EM, perturber.BodyID)
-      local r_ratio = DebugValueForBody(string.format("%s: r_ratio", perturber.BodyName), RE_m / heatedObj.Radius, perturber.BodyID)
-      local a_ratio = DebugValueForBody(string.format("%s: a_ratio", perturber.BodyName), A_EM_m / Pert_Sma, perturber.BodyID)
-      local n_ratio = DebugValueForBody(string.format("%s: n_ratio", perturber.BodyName), n / N_EM, perturber.BodyID)
+      local n = DW3Elw_DebugValueForBody(string.format("%s: n", perturber.BodyName), 2 * math.pi / Pert_OrbPer, perturber.BodyID)
+      local q = DW3Elw_DebugValueForBody(string.format("%s: q", perturber.BodyName), Pert_MassKg / (heatedObj.MassEM * DW3Elw_ME_kg), perturber.BodyID)
+      local q_ratio = DW3Elw_DebugValueForBody(string.format("%s: q_ratio", perturber.BodyName), q / DW3Elw_MMRATIO_EM, perturber.BodyID)
+      local r_ratio = DW3Elw_DebugValueForBody(string.format("%s: r_ratio", perturber.BodyName), DW3Elw_RE_m / heatedObj.Radius, perturber.BodyID)
+      local a_ratio = DW3Elw_DebugValueForBody(string.format("%s: a_ratio", perturber.BodyName), DW3Elw_A_EM_m / Pert_Sma, perturber.BodyID)
+      local n_ratio = DW3Elw_DebugValueForBody(string.format("%s: n_ratio", perturber.BodyName), n / DW3Elw_N_EM, perturber.BodyID)
 
       local shape = 0
       if heatedObj.TidalLock then
-        if E_EM > 0 then
-          shape = (Pert_Ecc / E_EM) ^ 2
+        if DW3Elw_E_EM > 0 then
+          shape = (Pert_Ecc / DW3Elw_E_EM) ^ 2
         end
       else
         local orbDays = periodAsDay(Pert_OrbPer)
         local p = orbDays / periodAsDay(math.abs(heatedObj.RotationPeriod))
-        local x_heated = math.cos(math.clamp(math.abs(heatedObj.AxialTilt), 0, math.pi))
-        local phi = Phi_ctl(Pert_Ecc, x_heated, p)
+        local x_heated = math.cos(math.clampDW3Elw(math.abs(heatedObj.AxialTilt), 0, math.pi))
+        local phi = DW3Elw_Phi_ctl(Pert_Ecc, x_heated, p)
         if phi >= math.huge or phi < 0 then phi = 0 end
-        shape = phi / Phi_ref()
+        shape = phi / DW3Elw_Phi_ref()
       end
 
       local factor = (q_ratio * q_ratio) * (r_ratio ^ 5) * (a_ratio ^ 6) * n_ratio * shape
-      DebugValueForBody(string.format("%s factors: %s, %s, %s, %s, %s", perturber.BodyName, (q_ratio * q_ratio), (r_ratio ^ 5), (a_ratio ^ 6), n_ratio, shape), factor, perturber.BodyID)
-      local H_TW = DebugValueForBody("H_TW for "..perturber.BodyName, K_TW * factor, perturber.BodyID)
+      DW3Elw_DebugValueForBody(string.format("%s factors: %s, %s, %s, %s, %s", perturber.BodyName, (q_ratio * q_ratio), (r_ratio ^ 5), (a_ratio ^ 6), n_ratio, shape), factor, perturber.BodyID)
+      local H_TW = DW3Elw_DebugValueForBody("H_TW for "..perturber.BodyName, DW3Elw_K_TW * factor, perturber.BodyID)
       if H_TW > 0 then tidalHeating = tidalHeating + H_TW end
 
-      local arp = DebugValueForBody(string.format("%s: aRp", perturber.BodyName), perturber.SemiMajorAxis / heatedObj.Radius, perturber.BodyID)
+      local arp = DW3Elw_DebugValueForBody(string.format("%s: aRp", perturber.BodyName), perturber.SemiMajorAxis / heatedObj.Radius, perturber.BodyID)
       table.insert(moonaRp, arp)
     end
 
@@ -294,7 +303,7 @@ function ComputeTidalHeatingScore(elwScan, system, parentsTable)
         end
       end
       if pairs > 0 then
-        overlapPenalty = DebugValue(string.format("Overlap penalty (overlaps: %d, pairs: %d)", overlaps, pairs), math.clamp(overlaps / pairs, 0, 1))
+        overlapPenalty = DW3Elw_DebugValue(string.format("Overlap penalty (overlaps: %d, pairs: %d)", overlaps, pairs), math.clampDW3Elw(overlaps / pairs, 0, 1))
       end
     end
   end
@@ -302,25 +311,25 @@ function ComputeTidalHeatingScore(elwScan, system, parentsTable)
   return tidalHeating, overlapPenalty
 end
 
-function ClampE(e)
-  return math.clamp(e, 0, 0.999999)
+function DW3Elw_ClampE(e)
+  return math.clampDW3Elw(e, 0, 0.999999)
 end
 
-function Phi_ref()
-  local v = Phi_ctl(E_EM, X_EM_HEATED, P_EM_REF)
+function DW3Elw_Phi_ref()
+  local v = DW3Elw_Phi_ctl(DW3Elw_E_EM, DW3Elw_X_EM_HEATED, DW3Elw_P_EM_REF)
   if v > 0 then return v else return 1 end
 end
 
-function Phi_ctl(e, x, p)
-  local e_c = ClampE(e)
-  local x_c = math.clamp(x, -1, 1)
+function DW3Elw_Phi_ctl(e, x, p)
+  local e_c = DW3Elw_ClampE(e)
+  local x_c = math.clampDW3Elw(x, -1, 1)
   local p_c = p
   if p <= 0 then p_c = 1 end
 
-  return Na_e(e_c) + 0.5 * (1+ (x_c * x_c)) * Omega_e(e_c) * (p_c * p_c) - 2 * x_c * N_e(e_c) * p_c
+  return DW3Elw_Na_e(e_c) + 0.5 * (1+ (x_c * x_c)) * DW3Elw_Omega_e(e_c) * (p_c * p_c) - 2 * x_c * DW3Elw_N_e(e_c) * p_c
 end
 
-function Omega_e(e)
+function DW3Elw_Omega_e(e)
   local e2 = e*e
   local e4 = e2*e2
   local num = 1 + 3 * e2 + 0.375 * e4
@@ -332,7 +341,7 @@ function Omega_e(e)
   end
 end
 
-function N_e(e)
+function DW3Elw_N_e(e)
   local e2 = e*e
   local e4 = e2*e2
   local e6 = e4*e2
@@ -345,7 +354,7 @@ function N_e(e)
   end
 end
 
-function Na_e(e)
+function DW3Elw_Na_e(e)
   local e2 = e*e
   local e4 = e2*e2
   local e6 = e4*e2
@@ -366,15 +375,15 @@ end
 ---@param max number
 ---@param ideal number
 ---@param valueAdjForDisplay number
----@return ComponentScore
-function GetComponentResult(label, formatStr, value, min, max, ideal, valueAdjForDisplay)
-  ---@type ComponentScore
-  local result = ComponentScore:new()
+---@return DW3Elw_ComponentScore
+function DW3Elw_GetComponentResult(label, formatStr, value, min, max, ideal, valueAdjForDisplay)
+  ---@type DW3Elw_ComponentScore
+  local result = DW3Elw_ComponentScore:new()
   result.Label = label
   result.FormatStr = formatStr
   result.Value = value
   result.ValueAdj = valueAdjForDisplay
-  result.Score = DebugValue(label, GaussianScore(min, max, ideal, value))
+  result.Score = DW3Elw_DebugValue(label, DW3Elw_GaussianScore(min, max, ideal, value))
   return result
 end
 
@@ -390,12 +399,12 @@ VALUE_ADJUST_PERCENT = 100
 ---@param system system
 ---@param parentsTable table<number, parents>
 ---@param childrenTable table<number, table<scan>>
-function ComputeSimilarityIndex(scan, system, parentsTable, childrenTable)
-  local starScan = FindStarScan(system)
+function DW3Elw_ComputeSimilarityIndex(scan, system, parentsTable, childrenTable)
+  local starScan = DW3Elw_FindStarScan(system)
   local starAgeGY = starScan.Age_MY / 1000
-  local nonO2fraction = ComputeNonO2Fraction(scan)
-  local tidalHeating, overlapPenalty = ComputeTidalHeatingScore(scan, system, parentsTable)
-  local orbitalPeriodAsDay = ComputeOrbitalPeriod(scan, system, parentsTable, childrenTable)
+  local nonO2fraction = DW3Elw_ComputeNonO2Fraction(scan)
+  local tidalHeating, overlapPenalty = DW3Elw_ComputeTidalHeatingScore(scan, system, parentsTable)
+  local orbitalPeriodAsDay = DW3Elw_DebugValueForBody("Orbital Period: ", DW3Elw_ComputeOrbitalPeriod(scan, system, parentsTable, childrenTable), scan.BodyID)
   local axialTilt = math.abs(scan.AxialTilt)
   local spinDir = " (forward spin)"
   -- If axial tilt > +/- 90, Consider using 180 - math.abs(axialtilt) -- which is similar but reverse spin? -- To be added in update 4.
@@ -404,20 +413,20 @@ function ComputeSimilarityIndex(scan, system, parentsTable, childrenTable)
     axialTilt = math.abs(axialTilt - math.pi)
   end
 
-  ---@type table<ComponentScore>
+  ---@type table<DW3Elw_ComponentScore>
   local subscores = {}
-  table.insert(subscores, GetComponentResult("Gravity", "%.2f g", gravityAsG(scan.SurfaceGravity), 0.7, 1.3, 1, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Non O2 fraction", "%.1f%%", nonO2fraction, 0.6, 0.95, 0.79, VALUE_ADJUST_PERCENT))
-  table.insert(subscores, GetComponentResult("Surface Pressure", "%.2f atm", pressureAsAtm(scan.SurfacePressure), 0.5, 2, 1, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Surface Temperature", "%.0f K", scan.SurfaceTemperature, 250, 320, 288, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Rotational Period", "%.1f d", math.abs(periodAsDay(scan.RotationPeriod)), 0.3, 4, 1, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Orbital Period", "%.1f d", math.abs(orbitalPeriodAsDay), 200, 700, 365, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Axial Tilt"..spinDir, "%.2f rad", axialTilt, 0.05, 0.7, 0.41, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Radius", "%.0f km", distanceAsKm(scan.Radius), 4500, 8000, 6371, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Metal fraction", "%.1f%%", scan.Composition.Metal * 100, 10, 70, 30, VALUE_ADJUST_NONE))
-  table.insert(subscores, GetComponentResult("Star age", "%.1f Gyr", starAgeGY, 1, 9, 4.6, VALUE_ADJUST_NONE))
-  local heatingSubScore = GetComponentResult("Tidal Heating", "%.2f TW", tidalHeating, 0.001, 20, 3.2, VALUE_ADJUST_NONE)
-  heatingSubScore.Score = heatingSubScore.Score * (1 - (math.clamp(overlapPenalty, 0, 1) ^ 1.5))
+  table.insert(subscores, DW3Elw_GetComponentResult("Gravity", "%.2f g", gravityAsG(scan.SurfaceGravity), 0.7, 1.3, 1, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Non O2 fraction", "%.1f%%", nonO2fraction, 0.6, 0.95, 0.79, VALUE_ADJUST_PERCENT))
+  table.insert(subscores, DW3Elw_GetComponentResult("Surface Pressure", "%.2f atm", pressureAsAtm(scan.SurfacePressure), 0.5, 2, 1, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Surface Temperature", "%.0f K", scan.SurfaceTemperature, 250, 320, 288, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Rotational Period", "%.1f d", math.abs(periodAsDay(scan.RotationPeriod)), 0.3, 4, 1, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Orbital Period", "%.1f d", math.abs(orbitalPeriodAsDay), 200, 700, 365, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Axial Tilt"..spinDir, "%.2f rad", axialTilt, 0.05, 0.7, 0.41, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Radius", "%.0f km", distanceAsKm(scan.Radius), 4500, 8000, 6371, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Metal fraction", "%.1f%%", scan.Composition.Metal * 100, 10, 70, 30, VALUE_ADJUST_NONE))
+  table.insert(subscores, DW3Elw_GetComponentResult("Star age", "%.1f Gyr", starAgeGY, 1, 9, 4.6, VALUE_ADJUST_NONE))
+  local heatingSubScore = DW3Elw_GetComponentResult("Tidal Heating", "%.2f TW", tidalHeating, 0.001, 20, 3.2, VALUE_ADJUST_NONE)
+  heatingSubScore.Score = heatingSubScore.Score * (1 - (math.clampDW3Elw(overlapPenalty, 0, 1) ^ 1.5))
   table.insert(subscores, heatingSubScore)
 
   local subscoreSum = 0
@@ -425,7 +434,7 @@ function ComputeSimilarityIndex(scan, system, parentsTable, childrenTable)
   if DW3Elw_VerboseEnable then
     componentExtDetail = "\n\nComponent scores:"
   end
-  ---@param scoreObj ComponentScore
+  ---@param scoreObj DW3Elw_ComponentScore
   for i, scoreObj in ipairs(subscores) do
     subscoreSum = subscoreSum + scoreObj.Score
 
@@ -434,7 +443,7 @@ function ComputeSimilarityIndex(scan, system, parentsTable, childrenTable)
     end
   end
 
-  local score = math.clamp((subscoreSum / GetTableSize(subscores)) * 100, 0, 100);
+  local score = math.clampDW3Elw((subscoreSum / DW3Elw_GetTableSize(subscores)) * 100, 0, 100);
   if score >= 0 then
     local firstDiscovery = scan.ScanType ~= 'NavBeaconDetail' and not scan.WasDiscovered and not scan.WasMapped
     notifyForBody(
@@ -448,9 +457,9 @@ end
 ---@param elwScan scan
 ---@param parentsTable table<number, parents>
 ---@return scan|nil
-function FindOrbitalParent(elwScan, parentsTable)
+function DW3Elw_FindOrbitalParent(elwScan, parentsTable)
   ---@type parents
-  local elwParents = parentsTable[GetBodyKey(elwScan)]
+  local elwParents = parentsTable[DW3Elw_GetBodyKey(elwScan)]
 
   if not elwParents or elwParents[0].ParentType ~= 'Planet' or not elwParents[0].Scan then return nil end
 
@@ -464,18 +473,18 @@ end
 ---@param system system
 ---@param parentsTable table<number, parents>
 ---@return table<scan>
-function FindPerturbers(elwBody, system, parentsTable)
+function DW3Elw_FindPerturbers(elwBody, system, parentsTable)
   local moons = {}
 
   local elwBodyParentBarycentreBodyId = -1
   ---@type parents
-  local elwBodyParents = parentsTable[GetBodyKey(elwBody)]
+  local elwBodyParents = parentsTable[DW3Elw_GetBodyKey(elwBody)]
   if elwBodyParents ~= nil and elwBodyParents[0].ParentType == "Null" then
     elwBodyParentBarycentreBodyId = elwBodyParents[0].Body
   end
 
   for bodyScan in bodies(system) do
-    local bodyKey = GetBodyKey(bodyScan)
+    local bodyKey = DW3Elw_GetBodyKey(bodyScan)
     if bodyKey == 0 then goto continue_loop end
     ---@type parents
     local p = parentsTable[bodyKey]
@@ -495,7 +504,7 @@ function FindPerturbers(elwBody, system, parentsTable)
 
       local pScan = p[0].Scan;
       ---@type scan
-      local mScan = ShallowCopy(bodyScan)
+      local mScan = DW3Elw_ShallowCopy(bodyScan)
       mScan.SemiMajorAxis = pScan.SemiMajorAxis
       mScan.OrbitalPeriod = pScan.OrbitalPeriod
       mScan.Eccentricity = pScan.Eccentricity
@@ -515,7 +524,7 @@ end
 
 ---@param system system
 ---@return scan
-function FindStarScan(system)
+function DW3Elw_FindStarScan(system)
   local lowestBodyID = math.huge
   local starScan
 
@@ -533,18 +542,17 @@ end
 ---@param allBodies allBodies
 ---@param system system
 ---@param parentsTable table<number, parents>
-function CheckSimilarityIndices(allBodies, system, parentsTable)
-  local childrenTable = BuildChildrenTable(system, parentsTable)
+function DW3Elw_CheckSimilarityIndices(allBodies, system, parentsTable)
+  local childrenTable = DW3Elw_BuildChildrenTable(system, parentsTable)
   for s in bodies(system) do
     if isPlanet(s) and s.PlanetClass == "Earthlike body" and s.TerraformState == '' then
-      ComputeSimilarityIndex(s, system, parentsTable, childrenTable)
+      DW3Elw_DebugValueForBody(string.format("Examining body %s", s.BodyName), s.BodyID, s.BodyID)
+      DW3Elw_ComputeSimilarityIndex(s, system, parentsTable, childrenTable)
     end
   end
 end
--- End DW3 Earth Similarity Index.
-
 ---@End Global - DW3
 
 ---@AllBodies DW3 Similarity Index.
-CheckSimilarityIndices(allBodies, system, parentsTable)
+DW3Elw_CheckSimilarityIndices(allBodies, system, parentsTable)
 ---@End

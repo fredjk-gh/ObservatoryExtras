@@ -6,18 +6,21 @@
 -- 
 -- Author: Cmdr Coddiwompler
 -- Contributions from: Maxsson
--- version 2026-09-20.1
 -- More Observatory Extras: https://github.com/fredjk-gh/ObservatoryExtras
+-- 
+-- Version History:
+-- version 2026-11-22.1 - Renamed functions and global variables to avoid collisions with other scripts.
+-- version 2026-09-20.1 - Initial revision
 
 ---@Global - Trifecta
-_ReportedTrifectas = {}
+_Trifecta_Reported = {}
 
 ---@param allBodies allBodies
 ---@param system system
 ---@param parentsTable table<number, parents>
-function CheckTrifecta(allBodies, system, parentsTable)
+function Trifecta_Check(allBodies, system, parentsTable)
   local key = tostring(allBodies.SystemAddress)
-  if _ReportedTrifectas[key] then return end
+  if _Trifecta_Reported[key] then return end
 
   local bodyCount = 0
   local ELWCount = 0
@@ -40,7 +43,7 @@ function CheckTrifecta(allBodies, system, parentsTable)
   end
 
   if bodyCount == allBodies.Count and ELWCount > 0 and WWCount > 0 and AWCount > 0 then
-    _ReportedTrifectas[key] = true -- suppress duplicate notifications.
+    _Trifecta_Reported[key] = true -- suppress duplicate notifications.
     notify("Trifecta system",
         "System contains at least one earth-like, water and ammonia world",
         string.format("%d ELWs, %d WWs, %d AWs", ELWCount, WWCount, AWCount))
@@ -49,5 +52,5 @@ end
 ---@End Global - Trifecta
 
 ---@AllBodies Trifecta check.
-CheckTrifecta(allBodies, system, parentsTable)
+Trifecta_Check(allBodies, system, parentsTable)
 ---@End

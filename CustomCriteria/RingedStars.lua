@@ -5,32 +5,34 @@
 -- More about Custom Criteria:  https://observatory.xjph.net/usage/plugins/explorer/customcriteria
 -- 
 -- Author: Cmdr Coddiwompler
--- version 2026-01-15.1
 -- More Observatory Extras: https://github.com/fredjk-gh/ObservatoryExtras
+--
+-- Version History:
+-- version 2026-11-22.1 - Disambiguate functions and global variables to prevent collisions with other scripts.
+-- version 2026-01-15.1 - Initial revision.
 
 ---@Global
 
-function string.startsWith(String, Start)
+function string.startsWith_RingedStars(String, Start)
    if (String == nil) or (Start == nil) then
      return false
    end
    return string.sub(String,1,string.len(Start))==Start
 end
 
----@End
-
--- Ringed stars of interest. Exclude the dirty dwarfs (LTY)
----@Complex Ringed Stars
-local uninterestingRingedStarTypes = {
+_RingedStars_UninterestingRingedStarTypes = {
   ['L'] = true;
   ['T'] = true;
   ['Y'] = true;
 }
+---@End
 
-if isStar(scan) and not uninterestingRingedStarTypes[scan.StarType] and hasRings(scan.Rings) then
+-- Ringed stars of interest. Exclude the dirty dwarfs (LTY)
+---@Complex Ringed Stars
+if isStar(scan) and not _RingedStars_UninterestingRingedStarTypes[scan.StarType] and hasRings(scan.Rings) then
   for ring in ringsOnly(scan.Rings) do
     local starTypeDesc = string.format('%s star', scan.StarType:gsub('_', ' '))
-    if string.startsWith(scan.StarType, 'D') then
+    if string.startsWith_RingedStars(scan.StarType, 'D') then
       starTypeDesc = string.format('White Dwarf (%s) star', scan.StarType)
     elseif scan.StarType == 'H' then
       starTypeDesc = 'Black Hole'
