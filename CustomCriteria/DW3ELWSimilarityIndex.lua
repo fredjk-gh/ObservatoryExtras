@@ -35,6 +35,7 @@ end
 ---@param t table
 function DW3Elw_GetTableSize(t)
   local count = 0
+  if t == nil then return count end
   for _ in pairs(t) do
       count = count + 1
   end
